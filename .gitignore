@@ -5,8 +5,8 @@ __pycache__/
 .pytest_cache/
 .ipynb_checkpoints/
 *.pyc
-private_data/*
-!private_data/.gitkeep
+private_data/
+source_data/
 ArabicFloods.csv
 *.log
 *.sqlite
