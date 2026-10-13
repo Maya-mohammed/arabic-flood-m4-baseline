@@ -61,6 +61,9 @@ In Colab, you may set `os.environ["GRADIO_SHARE"] = "1"` before launching `!pyth
 ## Dataset and private local tests
 
 This work refers to Alharbi & Lee (2019), *Crisis Detection from Arabic Tweets*, using the authors' `ArabicFloods.csv` (4,037 rows across Jordan, Kuwait, Qurayyat, Al Lith floods). The source corpus does not have a confirmed redistribution license in the provided proposal, so **do not upload it to the public repository**. Obtain it from the [original authors' repository](https://github.com/alaa-a-a/Arabic-Twitter-corpus-for-flood-detection), as documented in M2, and copy it to `private_data/ArabicFloods.csv` locally. Review the source's terms before use.
+Create the private_data directory locally before copying the dataset.
+On macOS/Linux or Google Colab, run `mkdir -p private_data`.
+On Windows PowerShell, run `New-Item -ItemType Directory -Force private_data`.
 
 ```bash
 python prepare_data.py --csv private_data/ArabicFloods.csv
@@ -99,7 +102,7 @@ Review, understand, and test all code before submitting. Disclose AI-assisted co
 - `usage_metadata` is used for input, output, reasoning and total token counts **when the API supplies them**; absent counts remain blank, not invented.
 - **USD cost is not computed** without a verified price for the actual model and billing tier. Record the correct provider tariff before reporting any numeric cost.
 - Three-seed comparison, ≥20-case golden set and multi-agent treatment are later milestones (M5/M6), not claims of completion in M4.
-- The API key and protected corpus are excluded from Git. Read the `Evaluation_Task_Review.md` for limitations in the class activity's success criteria and wording.
+- The API key and protected corpus are excluded from Git. See M4_TEST_EVIDENCE.md for the recorded M4 results and their limitations..
 
 ## M4 live demo (five minutes)
 
