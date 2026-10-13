@@ -1,0 +1,11 @@
+case_id,category,tweet,gold_relevance,gold_information_type,review_status
+EDGE01,English flood,"Floodwaters have blocked the road and rescue teams are helping families.",,,REQUIRES_TEAM_LABEL
+EDGE02,English rain only,"I hope it rains tomorrow, the weather has been dry.",,,REQUIRES_TEAM_LABEL
+EDGE03,Arabic dialect,"السيل دخل للبيوت والحارة غرقت والناس محتاجين مساعدة.",,,REQUIRES_TEAM_LABEL
+EDGE04,Mixed Arabic English,"في Flood كبير الآن انتبهوا من الشوارع المغمورة.",,,REQUIRES_TEAM_LABEL
+EDGE05,Arabizi,"fe sayal kteer bel manta2a, el share3 2afal.",,,REQUIRES_TEAM_LABEL
+EDGE06,Rain prayers,"اللهم اسقنا الغيث ولا تجعلنا من القانطين.",,,REQUIRES_TEAM_LABEL
+EDGE07,Sarcasm,"ما شاء الله شارعنا صار مسبح أولمبي بعد السيول.",,,REQUIRES_TEAM_LABEL
+EDGE08,Very short,"السيول!!",,,REQUIRES_TEAM_LABEL
+EDGE09,No flood mention,"الازدحام اليوم شديد والشارع مغلق بسبب الصيانة.",,,REQUIRES_TEAM_LABEL
+EDGE10,Related not applicable candidate,"أخبار عن أمطار وسيول الأمس دون تفاصيل عن أضرار أو تحذيرات.",,,REQUIRES_TEAM_LABEL
