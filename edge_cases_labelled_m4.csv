@@ -1,0 +1,12 @@
+﻿case_id,category,tweet,gold_relevance,gold_information_type,review_status,label_reason
+EDGE01,English / flood damage,Floodwaters damaged the bridge and cracked the road leading to the village.,Related,Infrastructure and utilities damage,USER_APPROVED_PROPOSALS,English wording; explicit physical damage to transport infrastructure.
+EDGE02,English / rain without a flood,I hope it rains this weekend. The plants are so dry.,Not related,Not applicable,USER_APPROVED_PROPOSALS,"A wish for rain, not a report about flooding."
+EDGE03,Arabic dialect / people affected,السيل دخل البيوت والناس محاصرين جوا ومحتاجين إنقاذ.,Related,Affected individuals,USER_APPROVED_PROPOSALS,People are trapped in homes after flooding; the focus is affected people.
+EDGE04,Mixed Arabic-English / warning,انتبهوا، floodwater غطّت الطريق الرئيسي، لا تمرّون منه!,Related,Caution and advice,USER_APPROVED_PROPOSALS,Explicit advice not to use a road covered by floodwater.
+EDGE05,Arabizi / damaged bridge,el sayal kassar el kobri w el taree2 et2afal.,Related,Infrastructure and utilities damage,USER_APPROVED_PROPOSALS,Arabizi describes floodwater damaging a bridge and closing the road.
+EDGE06,Arabic rain prayer,اللهم اسقنا الغيث ولا تجعلنا من القانطين.,Not related,Not applicable,USER_APPROVED_PROPOSALS,Prayer for rainfall with no flood event reported.
+EDGE07,Sarcasm / damage,يا سلام! السيل كسّر أسفلت شارعنا، صرنا نسبح بدل ما نسوق 🙃,Related,Infrastructure and utilities damage,USER_APPROVED_PROPOSALS,Sarcasm does not remove the explicit statement about flood-damaged asphalt.
+EDGE08,Very short / trapped people,سيل! ناس محاصرين!,Related,Affected individuals,USER_APPROVED_PROPOSALS,Very short but explicitly reports trapped people during a flood.
+EDGE09,Unrelated road closure,الطريق الرئيسي مقفل للصيانة إلى مساء الخميس.,Not related,Not applicable,USER_APPROVED_PROPOSALS,Road closure due to maintenance; no flood reported.
+EDGE11,Metaphorical drowning,مدينتنا تغرق بالفساد، وين المحاسبة؟,Not related,Not applicable,USER_APPROVED_PROPOSALS,"Drowning is figurative and refers to corruption, not a physical flood."
+EDGE12,Volunteering / confusing affected people,يا جماعة، نحتاج متطوعين يوزعون بطانيات على الأسر المتضررة من السيول.,Related,Donations and volunteering,USER_APPROVED_PROPOSALS,"The central action is requesting volunteers, even though affected families are mentioned."
