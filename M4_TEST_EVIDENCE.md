@@ -4,7 +4,44 @@
 
 This note records the tests actually run for M4. The normal-case results were recorded in the team's Colab screenshots; the edge-case numbers below were checked against the exported CSV files. These are small development and robustness checks, **not the final M5 evaluation**.
 
-**Version note:** these runs used an earlier prompt version **without label definitions** and the earlier runner scripts (`evaluate_dev.py` and `evaluate_edge_m4.py`). The repository now adds the definitions in `labels.py` and merges the two runners into `evaluate.py`, which counts failed requests as wrong for every test set. Results from the current version should be recorded as a separate run.
+**Version note:** these runs used an earlier prompt version **without label definitions** and the earlier runner scripts (`evaluate_dev.py` and `evaluate_edge_m4.py`). The repository now adds the definitions in `labels.py` and merges the two runners into `evaluate.py`, which counts failed requests as wrong for every test set. Results from the current version are recorded as Run 2 below.
+
+## Run 2 - current code (13 October 2026)
+
+Same model, same 8 normal cases and 11 edge cases, run with `evaluate.py --pause 15` after adding label definitions (`labels.py`) and the rate-limit handling. No request failed.
+
+**Normal development cases: 8/8 valid pairs (100%), 4/8 joint exact matches (50.0%), mean 2.01 s per tweet.**
+
+| Reference labels | Prediction | Correct? | Time (s) |
+|---|---|:---:|---:|
+| Not related / Not applicable | Related / Not applicable | No | 1.84 |
+| Related / Affected individuals | Related / Affected individuals | Yes | 2.13 |
+| Related / Caution and advice | Related / Other useful information | No | 2.00 |
+| Related / Donations and volunteering | Related / Other useful information | No | 2.02 |
+| Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Yes | 1.94 |
+| Related / Not applicable | Related / Not applicable | Yes | 2.05 |
+| Related / Other useful information | Related / Not applicable | No | 1.98 |
+| Related / Sympathy and emotional support | Related / Sympathy and emotional support | Yes | 2.14 |
+
+**Edge cases: 11/11 valid pairs (100%), 9/11 joint exact matches (81.8%), mean 2.13 s per tweet.**
+
+| Case | Reference labels | Prediction | Correct? | Time (s) |
+|---|---|---|:---:|---:|
+| EDGE01 | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Yes | 2.18 |
+| EDGE02 | Not related / Not applicable | Not related / Not applicable | Yes | 2.15 |
+| EDGE03 | Related / Affected individuals | Related / Affected individuals | Yes | 1.82 |
+| EDGE04 | Related / Caution and advice | Related / Caution and advice | Yes | 2.21 |
+| EDGE05 | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Yes | 2.40 |
+| EDGE06 | Not related / Not applicable | Related / Sympathy and emotional support | No | 1.85 |
+| EDGE07 | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Yes | 2.13 |
+| EDGE08 | Related / Affected individuals | Related / Affected individuals | Yes | 2.55 |
+| EDGE09 | Not related / Not applicable | Related / Infrastructure and utilities damage | No | 2.40 |
+| EDGE11 | Not related / Not applicable | Not related / Not applicable | Yes | 2.02 |
+| EDGE12 | Related / Donations and volunteering | Related / Donations and volunteering | Yes | 1.74 |
+
+The errors are of two kinds: tweets wrongly marked `Related` (one normal case, EDGE06, EDGE09) and confusion involving `Other useful information` (three normal cases). These will be studied in M5 on the larger development set. An earlier attempt at Run 2 hit the free-tier per-minute limit (`429 RESOURCE_EXHAUSTED`) on 11 tweets; that attempt is not reported as a result because the code was then fixed to wait out the limit and the full run was repeated.
+
+The sections below describe **Run 1**.
 
 ## 1. Source-labelled development cases
 

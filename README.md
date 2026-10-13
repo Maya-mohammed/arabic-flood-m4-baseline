@@ -111,22 +111,28 @@ python evaluate.py --cases edge_cases_labelled_m4.csv --out private_data/edge_re
 
 ## Recorded M4 results
 
-These results were recorded on 13 October 2026 with an **earlier prompt version that did not include label definitions**. The current prompts add the definitions in `labels.py`, so the numbers below describe that earlier version.
+Both runs were on 13 October 2026 with `gemini-3.5-flash-lite`, on the same 8 normal cases and 11 edge cases.
 
-| Test | Valid final pairs | Both labels correct |
-|---|---:|---:|
-| 8 normal development cases | 8/8 (100%) | 5/8 (62.5%) |
-| 11 edge cases | 9/11 (81.8%) | 8/11 (72.7%) |
+| Test | Run 1: earlier prompts (no label definitions) | Run 2: current code |
+|---|---|---|
+| 8 normal cases: valid pairs | 8/8 (100%) | 8/8 (100%) |
+| 8 normal cases: both labels correct | 5/8 (62.5%) | 4/8 (50.0%) |
+| 11 edge cases: valid pairs | 9/11 (81.8%) | 11/11 (100%) |
+| 11 edge cases: both labels correct | 8/11 (72.7%) | 9/11 (81.8%) |
+| Failed requests | 2 (503 errors) | 0 |
+| Mean time per tweet | 57.17 s (normal), 243.18 s (9 completed edge cases) | 2.01 s (normal), 2.13 s (edge) |
 
-In the edge run, EDGE09 got a wrong label pair, and EDGE11 and EDGE12 failed with `503 UNAVAILABLE` (model under high demand). Mean time per tweet was 57.17 s for the normal cases and 243.18 s for the nine completed edge cases. These are small selected tests, not an accuracy estimate for the whole dataset. Details are in [`M4_TEST_EVIDENCE.md`](M4_TEST_EVIDENCE.md).
+**Run 2 errors.** Normal cases: a Not related tweet was labelled `Related / Not applicable`; Caution and advice and Donations and volunteering tweets were labelled `Other useful information`; an Other useful information tweet was labelled `Not applicable`. Edge cases: EDGE06 (prayer for rain) was labelled `Related / Sympathy and emotional support`, and EDGE09 (road closed for maintenance) was labelled `Related / Infrastructure and utilities damage`. Most errors are tweets wrongly marked `Related` or confusion with `Other useful information`; we will look at these in M5 on the larger development set rather than tune prompts on these few cases.
+
+These are small selected tests. A difference of one tweet between the runs is not evidence that one version is better. Time per tweet dropped from minutes to about 2 seconds between the runs; we do not know how much of this came from Gemini service conditions and how much from the code changes. Run 2 used `--pause 15` between tweets, which is not counted in the time per tweet. Details are in [`M4_TEST_EVIDENCE.md`](M4_TEST_EVIDENCE.md).
 
 ## Scope and limitations
 
 - M4 covers the single-agent baseline only. The multi-agent treatment and the comparison come in M5 and M6.
 - The plan is three model calls per tweet. Repairs and retries can add requests; they are counted, not hidden.
-- Response time depends on the Gemini service. During our tests, single tweets took from about 30 seconds to several minutes, and some requests failed with 503 errors.
+- Response time depends on the Gemini service. In Run 1, single tweets took from about 30 seconds to several minutes and two requests failed with 503 errors; in Run 2, every tweet took about 2 seconds. A free-tier key can also hit its per-minute limit (429), which the code now waits out.
 - `classify_tweet` and `evaluate.py` accept a `seed`, but Google's documentation for this model does not confirm that the seed is applied. This will be checked before the three-seed runs in M5.
-- The 99% valid-output target in our evaluation plan is a team goal. The M4 edge run did not reach it (9/11).
+- The 99% valid-output target in our evaluation plan is a team goal. Run 2 returned valid pairs for all 19 test tweets, but that is too small a sample to show the target is met.
 - USD cost is not calculated yet; token counts are recorded so it can be calculated from the official price list.
 - This is a classification demo, not a flood-warning service.
 
