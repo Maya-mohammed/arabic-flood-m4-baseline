@@ -15,7 +15,8 @@ from typing import Any
 from labels import RELEVANCE_LABELS, INFO_TYPE_LABELS, label_guide
 
 MODEL_NAME = "gemini-3.5-flash-lite"  # Model used for the recorded M4 tests.
-MAX_API_ATTEMPTS = 3      # Retries only for temporary server errors (429/5xx).
+MAX_API_ATTEMPTS = 5      # Retries only for rate limits (429) and temporary server errors (5xx).
+RATE_LIMIT_WAIT = 15      # Seconds to wait after a 429, multiplied by the attempt number.
 MAX_FORMAT_REPAIRS = 1    # One extra request per stage, only if the output is malformed or the final pair is invalid.
 
 __all__ = ["classify_tweet", "is_consistent", "has_allowed_labels",
@@ -112,7 +113,9 @@ def classify_tweet(tweet_text: str, *, client=None, model: str = MODEL_NAME,
                 code = getattr(exc, "code", None)
                 if code not in (429, 500, 502, 503, 504) or retry == MAX_API_ATTEMPTS - 1:
                     raise
-                time.sleep(2 ** retry)
+                # A 429 means the per-minute quota is used up, so wait long enough
+                # for it to reset; for 5xx errors a short back-off is enough.
+                time.sleep(RATE_LIMIT_WAIT * (retry + 1) if code == 429 else 2 ** retry)
         raise RuntimeError("Unreachable retry state")
 
     label_rules = (

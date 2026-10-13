@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import time
 from pathlib import Path
 
 from baseline import classify_tweet, is_consistent
@@ -102,6 +103,7 @@ def main():
     ap.add_argument("--out", required=True, help="Where to save the results CSV")
     ap.add_argument("--limit", type=int, default=0, help="Run only the first N cases (0 = all)")
     ap.add_argument("--seed", type=int, default=None, help="Optional seed sent to the model")
+    ap.add_argument("--pause", type=float, default=0, help="Seconds to wait between tweets (helps with free-tier rate limits)")
     args = ap.parse_args()
 
     cases = read_cases(args.cases)
@@ -113,6 +115,8 @@ def main():
     out = Path(args.out)
     rows: list[dict] = []
     for idx, case in enumerate(cases, start=1):
+        if idx > 1 and args.pause:
+            time.sleep(args.pause)
         row = run_case(idx, case, args.seed)
         rows.append(row)
         save(rows, out)  # Save after every case.

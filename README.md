@@ -23,7 +23,7 @@ Every prompt includes the closed label sets and a one-line definition of each la
 
 **Model and settings:** `gemini-3.5-flash-lite` with its default settings and JSON output. We do not send `temperature`, because Gemini 3.5 models ignore it. No training, extra agents, or outside data retrieval are used.
 
-**Repairs and retries:** if a stage returns malformed JSON or a label outside the closed sets, or if the final pair breaks the consistency rule, the agent gets **one** repair request for that stage. Temporary server errors (429/5xx) are retried up to 3 times. All calls, repairs and attempts are counted and reported.
+**Repairs and retries:** if a stage returns malformed JSON or a label outside the closed sets, or if the final pair breaks the consistency rule, the agent gets **one** repair request for that stage. Rate-limit errors (429) are retried after waiting 15, 30, 45 and 60 seconds; temporary server errors (5xx) are retried after a short wait. Each request is tried at most 5 times. All calls, repairs and attempts are counted and reported.
 
 ## Files
 
@@ -98,16 +98,16 @@ python prepare_data.py --csv private_data/ArabicFloods.csv
 **Normal cases:** `private_data/normal_cases.csv` has 8 development tweets, one for each valid label pair, covering all four floods.
 
 ```bash
-python evaluate.py --cases private_data/normal_cases.csv --out private_data/normal_results.csv
+python evaluate.py --cases private_data/normal_cases.csv --out private_data/normal_results.csv --pause 15
 ```
 
 **Edge cases:** `edge_cases_labelled_m4.csv` has 11 team-written tweets: English, Arabic dialects, mixed Arabic-English, Arabizi, rain without a flood, sarcasm, very short tweets, and confusing cases seen during development. One team member reviewed the reference labels before Gemini was run. They are not labels from the original corpus and were not double-annotated. A twelfth candidate (EDGE10) was dropped before testing because its label was unclear.
 
 ```bash
-python evaluate.py --cases edge_cases_labelled_m4.csv --out private_data/edge_results.csv
+python evaluate.py --cases edge_cases_labelled_m4.csv --out private_data/edge_results.csv --pause 15
 ```
 
-`evaluate.py` keeps every case in the results. A request that fails (for example an API error) counts as an invalid pair and, if the case has a reference label, as a wrong answer. Results are saved after each case. The edge cases also appear as clickable examples in the interface.
+`--pause 15` waits 15 seconds between tweets so a free-tier key does not hit its per-minute request limit (each tweet needs three requests). `evaluate.py` keeps every case in the results. A request that fails (for example an API error) counts as an invalid pair and, if the case has a reference label, as a wrong answer. Results are saved after each case. The edge cases also appear as clickable examples in the interface.
 
 ## Recorded M4 results
 
