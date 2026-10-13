@@ -10,7 +10,7 @@ import ast
 from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
-from baseline import RELEVANCE_LABELS, INFO_TYPE_LABELS
+from labels import RELEVANCE_LABELS, INFO_TYPE_LABELS
 
 REQUIRED = ["ID", "Tweet Text", "Relevance", "Information Type", "Event"]
 

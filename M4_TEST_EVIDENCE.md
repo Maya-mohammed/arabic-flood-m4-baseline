@@ -4,6 +4,8 @@
 
 This note records the tests actually run for M4. The normal-case results were recorded in the team's Colab screenshots; the edge-case numbers below were checked against the exported CSV files. These are small development and robustness checks, **not the final M5 evaluation**.
 
+**Version note:** these runs used an earlier prompt version **without label definitions** and the earlier runner scripts (`evaluate_dev.py` and `evaluate_edge_m4.py`). The repository now adds the definitions in `labels.py` and merges the two runners into `evaluate.py`, which counts failed requests as wrong for every test set. Results from the current version should be recorded as a separate run.
+
 ## 1. Source-labelled development cases
 
 | Case | Original reference labels | Baseline prediction | Both correct? | Time (s) |
@@ -60,7 +62,7 @@ The team entered a new Arabic road-closure warning through Gradio, outside the C
 - These were small preliminary M4 tests; neither percentage is a general population accuracy estimate, and the two sets should not be combined into one accuracy figure.
 - The team set **99% valid output** as a goal in the class activity. The edge-case run did **not** reach that goal (9/11 valid). No claim is made that the 99% target has been achieved.
 - Source corpus: 4,037 original rows and 4,028 cleaned rows (805 development and 3,223 held aside), as recorded in the project preparation run. These raw corpus rows are intentionally not published in the GitHub repository.
-- The current `evaluate_dev.py` in the repository excludes requests with no prediction from its exact-match denominator. For the M4 edge run, the team used a **separate local variant (`evaluate_edge_m4.py`)** that records failed labelled requests as `exact_match=False` and saves progress after each case. Its changes are not automatically present in the GitHub repository unless that file is added. The final M5 evaluator must use the same predeclared denominator in both conditions and record errors consistently.
+- The normal cases were run with `evaluate_dev.py`, which left failed requests out of the exact-match denominator (no request failed in that run, so the 5/8 result is not affected). The edge run used `evaluate_edge_m4.py`, which counts failed labelled requests as wrong. Both are now replaced by `evaluate.py`, which counts failures as wrong for every test set. The final M5 evaluator must use the same denominator in both conditions.
 - M5 will freeze the test set and settings, prepare a golden set with at least 20 cases, and evaluate the baseline across three seeds. M6 will implement the two specialists plus Judge and compare it with the baseline. Those later-stage results are **not** part of M4.
 
 **Evidence retained by the team:** `M4_Edge_Test_Evidence.zip` contains the 11-case input, per-batch output CSVs, the consolidated original-run results, and the EDGE11 recovery result. This private evidence backup does not need to be put on a public repository.
