@@ -1,68 +1,156 @@
-# M4 Test Evidence - Baseline and Edge Cases
+# Arabic Flood-Crisis Tweet Classification — M4 Baseline
 
-**Date:** 13 October 2026  |  **Model used in the Colab tests:** `gemini-3.5-flash-lite`  |  **System:** one generalist agent with three planned sequential calls (initial classification, self-review, final classification).
+This repository contains our **single-agent baseline** for classifying flood-related tweets. For Milestone 4, the goal is to show that the baseline runs, accepts a new tweet through a user interface, and returns two classification labels. The multi-agent version is planned for a later milestone.
 
-This note records the tests actually run for M4. The normal-case results were recorded in the team's Colab screenshots; the edge-case numbers below were checked against the exported CSV files. These are small development and robustness checks, **not the final M5 evaluation**.
+## What the system does
 
-## 1. Source-labelled development cases
+For each tweet, it predicts:
 
-| Case | Original reference labels | Baseline prediction | Both correct? | Time (s) |
-|---|---|---|:---:|---:|
-| 1 | Related / Caution and advice | Related / Caution and advice | Yes | 77.52 |
-| 2 | Related / Affected individuals | Related / Affected individuals | Yes | 71.89 |
-| 3 | Not related / Not applicable | Related / Other useful information | No | 76.06 |
-| 4 | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Yes | 42.29 |
-| 5 | Related / Donations and volunteering | Related / Affected individuals | No | 77.10 |
-| 6 | Related / Not applicable | Related / Other useful information | No | 36.41 |
-| 7 | Related / Other useful information | Related / Other useful information | Yes | 30.40 |
-| 8 | Related / Sympathy and emotional support | Related / Sympathy and emotional support | Yes | 45.67 |
+- **Relevance:** `Related` or `Not related`.
+- **Information Type:** `Affected individuals`, `Infrastructure and utilities damage`, `Donations and volunteering`, `Caution and advice`, `Sympathy and emotional support`, `Other useful information`, or `Not applicable`.
 
-**Results:** 8/8 valid output pairs (100%); 5/8 joint exact matches (62.5%); mean latency 57.17 s per tweet.
+The baseline uses **one generalist agent and three sequential calls** to the same Gemini model:
 
-The eight cases were selected for coverage of the seven Information Type classes, a Not related case, and the four flood events. This is a small, selected development sample, not a representative sample of the full dataset. The held-out evaluation partition was not used for these checks.
+1. Initial classification of both labels.
+2. Self-review of that classification.
+3. Final classification of both labels.
 
-## 2. Separate, synthetic edge cases
+We used `gemini-3.5-flash-lite` in our recorded M4 tests. Access and response time depend on the Gemini account and service availability. No model training, additional agents, or external data retrieval is involved in this baseline.
 
-The team prepared 12 candidate cases using the class task categories (English, Arabic dialects, mixed language, Arabizi, rain without a flood, short posts, and sarcasm), plus patterns seen in development errors. One ambiguous candidate, EDGE10, was excluded **before testing**; it has no scored result. One team member reviewed and approved the proposed labels for the remaining 11 cases before Gemini was called. These are team-reviewed proposed labels, **not labels supplied by the original dataset authors or independently double-annotated**.
+**Consistency rule:** If the Relevance label is `Not related`, Information Type must be `Not applicable`. The reverse is **not** required: `Related / Not applicable` is a valid pair in this project.
 
-| Case | Intended difficulty | Gold pair | Model result | Outcome | Time (s) |
-|---|---|---|---|---|---:|
-| EDGE01 | English / flood damage | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Correct | 291.04 |
-| EDGE02 | English / rain without a flood | Not related / Not applicable | Not related / Not applicable | Correct | 226.28 |
-| EDGE03 | Arabic dialect / people affected | Related / Affected individuals | Related / Affected individuals | Correct | 233.69 |
-| EDGE04 | Mixed Arabic-English / warning | Related / Caution and advice | Related / Caution and advice | Correct | 168.64 |
-| EDGE05 | Arabizi / damaged bridge | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Correct | 442.07 |
-| EDGE06 | Arabic rain prayer | Not related / Not applicable | Not related / Not applicable | Correct | 323.03 |
-| EDGE07 | Sarcasm / damage | Related / Infrastructure and utilities damage | Related / Infrastructure and utilities damage | Correct | 118.63 |
-| EDGE08 | Very short / trapped people | Related / Affected individuals | Related / Affected individuals | Correct | 191.19 |
-| EDGE09 | Unrelated road closure | Not related / Not applicable | Related / Caution and advice | Wrong prediction | 194.08 |
-| EDGE11 | Metaphorical drowning | Not related / Not applicable | No final result (503) | API failure | Not recorded |
-| EDGE12 | Volunteering / confusing affected people | Related / Donations and volunteering | No final result (503) | API failure | Not recorded |
+## Files in this repository
 
-**Original 11-case run:** 9/11 valid final label pairs (**81.8%**); 8/11 joint exact matches (**72.7%**, treating cases with no final result as incorrect); 1 wrong label pair (EDGE09); 2 API failures (EDGE11 and EDGE12). Among the nine requests with a final prediction, 8/9 were exact matches (**88.9%**). This last figure is conditional on a result being returned, **not** the end-to-end score.
+| File | Purpose |
+|---|---|
+| `baseline.py` | Single-agent classification with three sequential Gemini calls, output validation, and usage logging |
+| `app.py` | Gradio interface for entering a new tweet |
+| `prepare_data.py` | Cleans and splits the original dataset locally |
+| `evaluate_dev.py` | Runs initial development tests |
+| `evaluate_edge_m4.py` | Runs labelled edge cases and records failures as incorrect for end-to-end exact-match |
+| `edge_cases_labelled_m4.csv` | Eleven team-reviewed synthetic edge cases and their proposed reference labels |
+| `edge_cases_template.csv` | Earlier blank-label template; **not** the scored set |
+| `M4_TEST_EVIDENCE.md` | Recorded M4 test results and limitations |
+| `tests/` | Unit tests that do not call Gemini |
+| `requirements.txt` | Required Python packages |
+| `.env.example` and `.gitignore` | Example environment setting and excluded private files |
 
-- **EDGE09:** The post said the road was closed for maintenance, with no flood. Reference: `Not related / Not applicable`; Gemini predicted `Related / Caution and advice`. That was a classification error.
-- **EDGE11 and EDGE12:** The original runs returned `ServerError: 503 UNAVAILABLE` rather than classification labels. The API message stated that the model was experiencing high demand. An additional **separate recovery attempt** on EDGE11 returned the same 503 error. EDGE12 was not retried. The original outcomes remain unchanged.
+## Set up and run
 
-## 3. Model usage and latency
+Use Python **3.10 or newer**. Download this repository using **Code → Download ZIP**, extract it, and open a terminal inside the extracted project folder.
 
-- For the **nine successfully classified edge cases only**: 27 successful model calls, 34 recorded API attempts (including retries), 0 recorded format repairs, and 5,279 total reported tokens.
-- Mean end-to-end classification time over those **nine cases**: **243.18 seconds**. The failed cases have blank latency and attempt-count fields in the exported CSV, so these totals are **not** totals for all 11 requests.
-- Reasoning-token counts were not provided in those records. USD cost has not been calculated because applicable billing prices were not verified.
-- The intended baseline is three sequential LLM calls per case. Actual API attempts can be higher because transient service errors may trigger retries.
+Install dependencies:
 
-## 4. Gradio UI test
+```bash
+python -m pip install -r requirements.txt
+```
 
-The team entered a new Arabic road-closure warning through Gradio, outside the CSV workflow. The displayed result was `Related / Caution and advice`, with 3 successful Gemini calls, 0 output repairs, 42.61 seconds, and 616 total tokens. This confirms one observed end-to-end interaction, not a claim about general accuracy or permanent hosting.
+Create a Gemini API key in Google AI Studio if you do not already have one. Make it available as an environment variable named `GEMINI_API_KEY`; **do not add the key to any file committed to GitHub**.
 
-## 5. Interpretation and next milestones
+On macOS/Linux:
 
-- These were small preliminary M4 tests; neither percentage is a general population accuracy estimate, and the two sets should not be combined into one accuracy figure.
-- The team set **99% valid output** as a goal in the class activity. The edge-case run did **not** reach that goal (9/11 valid). No claim is made that the 99% target has been achieved.
-- Source corpus: 4,037 original rows and 4,028 cleaned rows (805 development and 3,223 held aside), as recorded in the project preparation run. These raw corpus rows are intentionally not published in the GitHub repository.
-- The current `evaluate_dev.py` in the repository excludes requests with no prediction from its exact-match denominator. For the M4 edge run, the team used a **separate local variant (`evaluate_edge_m4.py`)** that records failed labelled requests as `exact_match=False` and saves progress after each case. Its changes are not automatically present in the GitHub repository unless that file is added. The final M5 evaluator must use the same predeclared denominator in both conditions and record errors consistently.
-- M5 will freeze the test set and settings, prepare a golden set with at least 20 cases, and evaluate the baseline across three seeds. M6 will implement the two specialists plus Judge and compare it with the baseline. Those later-stage results are **not** part of M4.
+```bash
+export GEMINI_API_KEY='YOUR_PRIVATE_KEY'
+```
 
-**Evidence retained by the team:** `M4_Edge_Test_Evidence.zip` contains the 11-case input, per-batch output CSVs, the consolidated original-run results, and the EDGE11 recovery result. This private evidence backup does not need to be put on a public repository.
+On Windows PowerShell:
 
-**Academic and data handling note:** If course policy requires disclosure of AI assistance in preparing code or test cases, disclose it accurately. Do not upload private API credentials or redistribute the source tweet corpus without the relevant permission.
+```powershell
+$env:GEMINI_API_KEY='YOUR_PRIVATE_KEY'
+```
+
+If using **Google Colab**, upload the repository ZIP and extract it, then change into the extracted project directory and install `requirements.txt`. Add your key to **Colab Secrets** with the exact name `GEMINI_API_KEY` and enable notebook access. Run this cell before the Python scripts:
+
+```python
+import os
+from google.colab import userdata
+key = userdata.get("GEMINI_API_KEY")
+if not key:
+    raise RuntimeError("GEMINI_API_KEY is missing from Colab Secrets")
+os.environ["GEMINI_API_KEY"] = key
+print("Gemini key loaded without displaying it")
+```
+
+### Run the Gradio interface
+
+From the project directory, run:
+
+```bash
+python app.py
+```
+
+Open the URL shown by Gradio, enter a new tweet, and click **Classify tweet**. The interface shows Relevance, Information Type, and basic run details. The text is sent to Google's Gemini API. **This is a classification demonstration, not a flood-warning service.**
+
+In Colab, to create a temporary public Gradio link, set `os.environ["GRADIO_SHARE"] = "1"` in a Python cell before running `!python app.py`. Keep the session running while testing, and stop it afterward. Anyone with that link can submit requests that use your API account.
+
+### Run unit tests
+
+These tests do **not** need a Gemini API key:
+
+```bash
+python -m pip install pytest
+python -m pytest -q tests
+```
+
+Passing unit tests checks code logic; it does not replace a real Gemini or Gradio test.
+
+## Dataset and normal development tests
+
+The source dataset is `ArabicFloods.csv`, referenced in our M2 proposal (Alharbi & Lee, 2019). It originally contains **4,037 rows** from four flood events (Jordan, Kuwait, Qurayyat, and Al Lith). We do **not** redistribute the corpus through this repository because redistribution permission has not been confirmed. Obtain it from the [source project](https://github.com/alaa-a-a/Arabic-Twitter-corpus-for-flood-detection) after reviewing its terms.
+
+Create a local `private_data` folder and place the original CSV there as `private_data/ArabicFloods.csv`. You can create the folder with `mkdir -p private_data` on macOS/Linux/Colab, or `New-Item -ItemType Directory -Force private_data` in Windows PowerShell.
+
+Run:
+
+```bash
+python prepare_data.py --csv private_data/ArabicFloods.csv
+```
+
+Our recorded preparation run produced **4,028 cleaned rows**, divided into **805 development** and **3,223 reserved evaluation** rows. The script removes conflicting/duplicate IDs and checks that the two partitions do not share IDs or identical tweet text. The original CSV is left unchanged. The reserved evaluation partition was **not used** for the reported M4 development tests.
+
+To run the small development test from the prepared files:
+
+```bash
+python evaluate_dev.py --cases private_data/dev_5.csv --out private_data/dev_5_results.csv
+```
+
+To test the eight selected normal cases:
+
+```bash
+python evaluate_dev.py --cases private_data/normal_cases.csv --out private_data/normal_results.csv
+```
+
+These commands make real Gemini API calls and may take time or count against API limits. `evaluate_dev.py` currently reports exact-match among cases with recorded predictions; consult `M4_TEST_EVIDENCE.md` for this known limitation. All eight of our recorded normal cases returned valid predictions.
+
+## Edge cases (class activity)
+
+We created **12 candidate** edge cases to cover English, Arabic dialects, mixed Arabic-English, Arabizi, rain without flooding, sarcasm, very short tweets, and difficult meanings seen during development. We excluded **EDGE10** before testing because its proposed reference label was ambiguous. The remaining **11 synthetic cases** and their proposed labels were reviewed by one team member before running Gemini. These labels are **not** labels from the original corpus or independently double-annotated.
+
+Run the labelled cases with:
+
+```bash
+python evaluate_edge_m4.py --cases edge_cases_labelled_m4.csv --out private_data/edge_11_results.csv
+```
+
+The edge-case evaluation is separate from the source-data evaluation. Its script writes results after each case and counts labelled requests with no final prediction as incorrect in the end-to-end exact-match rate. Actual model availability, delays, and retries can change the outcome on a new run.
+
+## Recorded M4 results (13 October 2026)
+
+| Test | Valid final label pairs | Both labels matched the reference |
+|---|---:|---:|
+| 8 selected normal development cases | 8/8 (100%) | 5/8 (62.5%) |
+| 11 separately labelled synthetic edge cases, original run | 9/11 (81.8%) | 8/11 (72.7%) |
+
+For the edge run, **EDGE09** returned an incorrect label pair; **EDGE11** and **EDGE12** returned `503 UNAVAILABLE` with no final prediction. A separate retry of EDGE11 also returned 503. We kept the original outcomes unchanged. The nine completed edge requests averaged **243.18 seconds**; latency for the two failed cases was not recorded. These are **small selected tests**, not a representative accuracy estimate for all tweets.
+
+We also tested Gradio with a new user-entered Arabic tweet; the interface returned `Related / Caution and advice` with three successful Gemini calls, 42.61 seconds, and 616 reported tokens.
+
+For per-case results, recorded API attempts, tokens and limitations, see **[`M4_TEST_EVIDENCE.md`](M4_TEST_EVIDENCE.md)**. We have not calculated USD cost without verified pricing for our actual Gemini account/model.
+
+## Scope and limitations
+
+- M4 provides a working **single-agent baseline** only. We have not implemented or compared the multi-agent treatment yet.
+- Three Gemini calls are planned for each classification; retries or format repairs may lead to more actual API attempts. The code records available usage information.
+- The **99% valid-output rate** in our class activity is a team goal, not a result reached by the edge-case run or a grading threshold stated in the M4 rubric.
+- The larger golden set, three-seed evaluation, and single-agent versus multi-agent comparison belong to later milestones (M5/M6).
+- Never upload the source corpus, local `private_data` files, real API keys, or private credentials to the repository. Follow course rules for acknowledging outside or AI-assisted work.
