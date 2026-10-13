@@ -103,3 +103,23 @@ def test_failed_case_counts_as_wrong(monkeypatch):
     assert row["exact_match"] is False and row["valid_final_pair"] is False
     assert "RuntimeError" in row["error"]
     assert "0/1" in evaluate.summary([row])
+
+
+def test_rate_limit_is_retried_with_longer_wait(monkeypatch):
+    waits = []
+    monkeypatch.setattr(baseline.time, "sleep", waits.append)
+    pair = {"relevance": "Related", "information_type": "Caution and advice"}
+
+    class RateLimited(Exception):
+        code = 429
+
+    class FlakyClient(FakeClient):
+        def generate_content(self, *, model, contents, config):
+            if len(self.calls) == 0 and not waits:
+                self.calls.append(None)
+                raise RateLimited("429 RESOURCE_EXHAUSTED")
+            return super().generate_content(model=model, contents=contents, config=config)
+
+    result = classify_tweet("tweet", client=FlakyClient([pair, pair, pair]))
+    assert waits == [baseline.RATE_LIMIT_WAIT]
+    assert result["api_attempts"] == 4 and result["successful_model_calls"] == 3
