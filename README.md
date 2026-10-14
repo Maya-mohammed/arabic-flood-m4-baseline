@@ -1,6 +1,6 @@
 # Arabic Flood-Crisis Tweet Classification — M4 Baseline
 
-**Team:** Maya Kroma - Ghaida Eltahir
+**Team:** Maya Kroma - Ghaida Eltahir - Rasha Ghilan
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maya-mohammed/arabic-flood-m4-baseline/blob/main/M4_baseline_colab.ipynb)
 
