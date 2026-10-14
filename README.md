@@ -1,5 +1,7 @@
 # Arabic Flood-Crisis Tweet Classification — M4 Baseline
 
+**Team:** Maya Kroma
+
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maya-mohammed/arabic-flood-m4-baseline/blob/main/M4_baseline_colab.ipynb)
 
 This repository contains our **single-agent baseline** for classifying Arabic flood-crisis tweets (CPCS683, Milestone 4). A user can type any tweet in a simple interface and get two labels back. The multi-agent treatment will be added in a later milestone.
