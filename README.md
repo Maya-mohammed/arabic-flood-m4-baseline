@@ -1,6 +1,6 @@
-# Arabic Flood-Crisis Tweet Classification — M4 Baseline
+# Arabic Flood-Crisis Tweet Classification: M4 Baseline
 
-**Team:** Maya Kroma - Ghaida Eltahir - Rasha Ghilan
+**Team:** Maya Kroma - Ghaida Fakery - Rasha Ghilan
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maya-mohammed/arabic-flood-m4-baseline/blob/main/M4_baseline_colab.ipynb)
 
@@ -130,13 +130,13 @@ These are small selected tests. A difference of one tweet between the runs is no
 
 ## Scope and limitations
 
-- M4 covers the single-agent baseline only. The multi-agent treatment and the comparison come in M5 and M6.
-- The plan is three model calls per tweet. Repairs and retries can add requests; they are counted, not hidden.
+- M4 covers the single-agent baseline only. The multi-agent treatment and the comparison come in M6.
+- The plan is three model calls per tweet. Repairs and retries can add requests, and we count and report them.
 - Response time depends on the Gemini service. In Run 1, single tweets took from about 30 seconds to several minutes and two requests failed with 503 errors; in Run 2, every tweet took about 2 seconds. A free-tier key can also hit its per-minute limit (429), which the code now waits out.
 - `classify_tweet` and `evaluate.py` accept a `seed`, but Google's documentation for this model does not confirm that the seed is applied. This will be checked before the three-seed runs in M5.
 - The 99% valid-output target in our evaluation plan is a team goal. Run 2 returned valid pairs for all 19 test tweets, but that is too small a sample to show the target is met.
 - USD cost is not calculated yet; token counts are recorded so it can be calculated from the official price list.
-- This is a classification demo, not a flood-warning service.
+- This is a classification demo. It is not meant for real flood warnings.
 
 ## Data notes
 
