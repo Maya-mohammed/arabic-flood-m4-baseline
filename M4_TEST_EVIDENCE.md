@@ -62,7 +62,7 @@ The eight cases were selected for coverage of the seven Information Type classes
 
 ## 2. Separate, synthetic edge cases
 
-The team prepared 12 candidate cases using the class task categories (English, Arabic dialects, mixed language, Arabizi, rain without a flood, short posts, and sarcasm), plus patterns seen in development errors. One ambiguous candidate, EDGE10, was excluded **before testing**; it has no scored result. One team member reviewed and approved the proposed labels for the remaining 11 cases before Gemini was called. These are team-reviewed proposed labels, **not labels supplied by the original dataset authors or independently double-annotated**.
+The team prepared 12 candidate cases using the class task categories (English, Arabic dialects, mixed language, Arabizi, rain without a flood, short posts, and sarcasm), plus patterns seen in development errors. One ambiguous candidate, EDGE10, was excluded **before testing**; it has no scored result. One team member reviewed the labels for the remaining 11 cases before Gemini was called. These are team-reviewed labels, **not labels supplied by the original dataset authors or independently double-annotated**.
 
 | Case | Intended difficulty | Gold pair | Model result | Outcome | Time (s) |
 |---|---|---|---|---|---:|
@@ -104,4 +104,4 @@ The team entered a new Arabic road-closure warning through Gradio, outside the C
 
 **Evidence retained by the team:** `M4_Edge_Test_Evidence.zip` contains the 11-case input, per-batch output CSVs, the consolidated original-run results, and the EDGE11 recovery result. This private evidence backup does not need to be put on a public repository.
 
-**Academic and data handling note:** If course policy requires disclosure of AI assistance in preparing code or test cases, disclose it accurately. Do not upload private API credentials or redistribute the source tweet corpus without the relevant permission.
+**Data handling:** API keys and the source tweet corpus are not stored in this repository.
