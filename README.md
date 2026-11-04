@@ -138,6 +138,6 @@ These are small selected tests. A difference of one tweet between the runs is no
 - USD cost is not calculated yet; token counts are recorded so it can be calculated from the official price list.
 - This is a classification demo, not a flood-warning service.
 
-## Data and AI-use notes
+## Data notes
 
-Do not upload the corpus, the `private_data/` folder, or any API key to this repository. Follow the course rules for acknowledging outside or AI-assisted work.
+Do not upload the corpus, the `private_data/` folder, or any API key to this repository.
