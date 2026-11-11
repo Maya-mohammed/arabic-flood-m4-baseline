@@ -117,7 +117,7 @@ def score_run(run: pd.DataFrame, prices: tuple[float, float] | None) -> dict:
         "cases_with_first_output": int(has_initial.sum()),
     }
 
-    usage = run.loc[returned, USAGE_COLUMNS].replace("", np.nan).astype(float)
+    usage = run.loc[returned, USAGE_COLUMNS].apply(pd.to_numeric, errors="coerce")
     for column in USAGE_COLUMNS:
         metrics[f"mean_{column}"] = usage[column].mean()  # NaN if never returned
     if prices is not None:
