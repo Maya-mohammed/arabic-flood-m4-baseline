@@ -94,7 +94,7 @@ In our runs, the same seed repeated the same output and different seeds changed 
 - **Per-class F1 and confusion matrices** for both labels.
 - **First-output consistency violation rate** (trajectory level): share of cases whose first complete output, the initial call after at most one format repair, has Not related with any Information Type other than Not applicable.
 - **Efficiency**: model calls, API attempts, repairs, input, output and reasoning tokens, and end-to-end latency, averaged over cases that returned a result.
-- **Estimated cost per case**: input tokens x $0.30 and output tokens x $2.50 per million, the paid Standard prices Google lists for `gemini-3.5-flash-lite`. The runs used the free tier, so the actual cost was zero.
+- **Estimated cost per case**: input tokens x USD 0.30 and output tokens x USD 2.50 per million, the paid Standard prices Google lists for `gemini-3.5-flash-lite`. The runs used the free tier, so the actual cost was zero.
 
 Every metric is reported per seed and as mean and sample standard deviation across the three seeds.
 
