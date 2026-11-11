@@ -1,0 +1,10 @@
+task,label,seed_42,seed_123,seed_2026,mean,sd
+Relevance,Related,0.964981,0.960317,0.964427,0.963242,0.002547
+Relevance,Not related,0.608696,0.642857,0.666667,0.639406,0.029139
+Information Type,Affected individuals,0.723404,0.708333,0.708333,0.713357,0.008701
+Information Type,Infrastructure and utilities damage,0.384615,0.551724,0.500000,0.478780,0.085551
+Information Type,Donations and volunteering,0.250000,0.320000,0.320000,0.296667,0.040415
+Information Type,Caution and advice,0.727273,0.727273,0.645161,0.699902,0.047407
+Information Type,Sympathy and emotional support,0.800000,0.820513,0.820513,0.813675,0.011843
+Information Type,Other useful information,0.400000,0.406250,0.441176,0.415809,0.022190
+Information Type,Not applicable,0.600000,0.619048,0.682927,0.633991,0.043436

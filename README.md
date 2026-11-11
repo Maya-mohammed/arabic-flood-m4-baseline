@@ -6,6 +6,8 @@
 
 This repository contains our **single-agent baseline** for classifying Arabic flood-crisis tweets (CPCS683, Milestone 4). A user can type any tweet in a simple interface and get two labels back. The multi-agent treatment will be added in a later milestone.
 
+**Milestone 5 (evaluation harness):** golden set, scoring code and the baseline scored across three seeds are described in [`m5/README.md`](m5/README.md).
+
 ## What the system does
 
 For each tweet it predicts:
@@ -39,6 +41,10 @@ Every prompt includes the closed label sets and a one-line definition of each la
 | `evaluate.py` | Runs the baseline on a labelled CSV and saves one result row per tweet |
 | `edge_cases_labelled_m4.csv` | 11 team-written edge cases with reference labels |
 | `M4_TEST_EVIDENCE.md` | Recorded M4 test results and limitations |
+| `make_golden_set.py` | M5: draws the frozen golden set from the reserved split |
+| `score_runs.py` | M5: scores saved runs per seed, with mean and standard deviation |
+| `M5_evaluation_colab.ipynb` | M5: runs the tests and scoring in Colab |
+| `m5/` | M5: golden set IDs, saved baseline runs, results and [`m5/README.md`](m5/README.md) |
 | `tests/` | Offline unit tests (no API calls) |
 | `requirements.txt` | Python packages |
 | `.env.example`, `.gitignore` | Key template and files kept out of Git |

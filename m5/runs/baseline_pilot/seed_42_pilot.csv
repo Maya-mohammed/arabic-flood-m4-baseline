@@ -1,0 +1,6 @@
+﻿case_id,gold_relevance,gold_information_type,initial_relevance,initial_information_type,review_relevance,review_information_type,pred_relevance,pred_information_type,exact_match,valid_final_pair,initial_violation,latency_seconds,model_calls,api_attempts,repairs,input_tokens,output_tokens,reasoning_tokens,total_tokens,error
+[1060960553697468417],Related,Sympathy and emotional support,Related,Sympathy and emotional support,Related,Sympathy and emotional support,Related,Sympathy and emotional support,True,True,False,35.3142,3,3,0,1143,55,,1198,
+[1060963138554736642],Related,Not applicable,Related,Not applicable,Related,Not applicable,Related,Not applicable,True,True,False,29.9535,3,3,0,1077,48,,1125,
+[1060963851901026306],Related,Infrastructure and utilities damage,Related,Not applicable,Related,Not applicable,Related,Not applicable,False,True,False,32.3089,3,4,0,1104,48,,1152,
+[1060967506930814977],Not related,Not applicable,Not related,Not applicable,Not related,Not applicable,Not related,Not applicable,True,True,False,31.5622,3,3,0,963,49,,1012,
+[1060980209212682240],Related,Infrastructure and utilities damage,Related,Not applicable,Related,Not applicable,Related,Not applicable,False,True,False,58.2488,3,3,0,996,46,,1042,
