@@ -102,3 +102,27 @@ def test_seed_is_read_from_file_name(tmp_path):
     assert sr.seed_from_path(tmp_path / "seed_2026.csv") == 2026
     with pytest.raises(ValueError):
         sr.seed_from_path(tmp_path / "results.csv")
+
+
+def test_treatment_judge_measures():
+    # Specialist pairs (initial) vs final pairs, against GOLD:
+    # A: pre wrong, final right  -> helpful override
+    # B: pre right, final wrong  -> harmful override
+    # C: pre = final = right     -> no override
+    # D: pre wrong, final wrong (changed) -> override, neither helpful nor harmful
+    run = run_rows([(r, i) for _, r, i in GOLD])
+    run["system"] = "treatment"
+    run.loc["A", ["initial_relevance", "initial_information_type"]] = ["Related", "Caution and advice"]
+    run.loc["B", ["pred_relevance", "pred_information_type"]] = ["Related", "Other useful information"]
+    run.loc["D", ["initial_relevance", "initial_information_type"]] = ["Not related", "Caution and advice"]
+    run.loc["D", ["pred_relevance", "pred_information_type"]] = ["Not related", "Not applicable"]
+    run.loc["D", "initial_violation"] = "True"
+    m = sr.score_run(run, None)["metrics"]
+    assert m["judge_override_rate"] == 0.75
+    assert m["helpful_override_rate"] == 0.25 and m["harmful_override_rate"] == 0.25
+    assert m["first_output_violation_rate"] == 0.25
+
+
+def test_baseline_runs_get_no_judge_measures():
+    m = sr.score_run(run_rows([(r, i) for _, r, i in GOLD]), None)["metrics"]
+    assert "judge_override_rate" not in m

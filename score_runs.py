@@ -14,6 +14,15 @@ Scoring rules:
   7 Information Type labels).
 - Token, call and latency means are taken over cases that returned a result.
 - USD cost is only computed when prices are given on the command line.
+- For treatment runs (system column = treatment), the first complete output
+  is the specialist pair, so first_output_violation_rate is also the
+  specialist-pair violation rate before the Judge. Three Judge measures are
+  added, each as a share of all cases: judge_override_rate (the final pair
+  differs from the specialist pair), helpful_override_rate (a wrong specialist
+  pair became a correct final pair) and harmful_override_rate (a correct
+  specialist pair became a wrong final pair). Their difference, helpful minus
+  harmful, equals the change in joint exact match made by the Judge when no
+  case fails at the Judge step.
 
 Example:
     python score_runs.py --condition baseline \
@@ -116,6 +125,13 @@ def score_run(run: pd.DataFrame, prices: tuple[float, float] | None) -> dict:
                                         if has_initial.any() else np.nan),
         "cases_with_first_output": int(has_initial.sum()),
     }
+    if "system" in run.columns and (run["system"] == "treatment").all():
+        pre_rel, pre_info = run["initial_relevance"], run["initial_information_type"]
+        pre_correct = has_initial & (pre_rel == gold_rel) & (pre_info == gold_info)
+        changed = valid & has_initial & ((pred_rel != pre_rel) | (pred_info != pre_info))
+        metrics["judge_override_rate"] = changed.mean()
+        metrics["helpful_override_rate"] = (changed & ~pre_correct & exact).mean()
+        metrics["harmful_override_rate"] = (changed & pre_correct & ~exact).mean()
 
     usage = run.loc[returned, USAGE_COLUMNS].apply(pd.to_numeric, errors="coerce")
     for column in USAGE_COLUMNS:
@@ -199,7 +215,8 @@ def main():
         total.to_csv(out / f"confusion_{name}_all_seeds.csv", index_label="gold")
 
     pct = ["joint_exact_match", "valid_output_rate", "relevance_macro_f1",
-           "info_type_macro_f1", "first_output_violation_rate"]
+           "info_type_macro_f1", "first_output_violation_rate", "judge_override_rate",
+           "helpful_override_rate", "harmful_override_rate"]
     counts = ["cases", "failed_requests", "cases_with_first_output"]
     print(f"\n{args.condition}: {len(golden)} cases x {len(seeds)} seeds {seeds}")
     for metric, row in summary.iterrows():

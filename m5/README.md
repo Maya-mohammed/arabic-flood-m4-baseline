@@ -70,7 +70,7 @@ All four floods are present: Al Lith 45, Kuwait 35, Jordan 30, Qurayyat 30.
 ## Fixed settings
 
 - Model: `gemini-3.5-flash-lite`, default settings, JSON output. `temperature`, `top_p` and `top_k` are not sent; Google's documentation for this model states that they are ignored. The thinking level stays at the model default, which Google lists as `minimal`.
-- `baseline.py`, `labels.py` and `evaluate.py` are unchanged since the M4 submission (last code change: 13 October 2026).
+- `baseline.py`, `labels.py` and `evaluate.py` were unchanged between the M4 submission and the M5 runs (last code change before the runs: 13 October 2026).
 - Seeds: 42, 123 and 2026. M6 uses the same three seeds.
 - Prompts: our evaluation plan allowed prompt changes on the development split. We made none to the baseline after M4. To keep the comparison controlled, the M6 treatment follows the same rule: its prompts are written once and checked on a few development tweets for format and pipeline errors only. Neither system's prompts are changed after seeing golden-set results.
 
