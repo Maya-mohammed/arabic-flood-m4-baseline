@@ -1,0 +1,12 @@
+count,baseline,treatment
+cases,420,420
+wrong,183,193
+invalid_or_failed,0,0
+not_related_labelled_related,23,15
+related_labelled_not_related,5,21
+relevance_right_info_type_wrong,155,157
+top_confusion_1,Donations and volunteering -> Other useful information (30),Donations and volunteering -> Affected individuals (23)
+top_confusion_2,Infrastructure and utilities damage -> Other useful information (27),Other useful information -> Not applicable (23)
+top_confusion_3,Caution and advice -> Other useful information (22),Donations and volunteering -> Other useful information (18)
+top_confusion_4,Donations and volunteering -> Affected individuals (14),Infrastructure and utilities damage -> Not applicable (15)
+top_confusion_5,Infrastructure and utilities damage -> Not applicable (10),Infrastructure and utilities damage -> Other useful information (13)

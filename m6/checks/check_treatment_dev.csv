@@ -1,0 +1,9 @@
+﻿case_id,gold_relevance,gold_information_type,initial_relevance,initial_information_type,review_relevance,review_information_type,pred_relevance,pred_information_type,exact_match,valid_final_pair,initial_violation,latency_seconds,model_calls,api_attempts,repairs,input_tokens,output_tokens,reasoning_tokens,total_tokens,error,system,model,seed,judge_changed_pair
+[1060981802893017091],Not related,Not applicable,Related,Not applicable,,,Related,Not applicable,False,True,False,1.9881,3,3,0,740,32,,772,,treatment,gemini-3.5-flash-lite,42,False
+[1061308900601925633],Related,Affected individuals,Related,Affected individuals,,,Related,Affected individuals,True,True,False,1.9064,3,3,0,833,32,,865,,treatment,gemini-3.5-flash-lite,42,False
+[1066422481039298561],Related,Caution and advice,Related,Other useful information,,,Related,Other useful information,False,True,False,2.3505,3,3,0,861,34,,895,,treatment,gemini-3.5-flash-lite,42,False
+[1066391238507749376],Related,Donations and volunteering,Related,Other useful information,,,Related,Other useful information,False,True,False,2.0489,3,3,0,846,34,,880,,treatment,gemini-3.5-flash-lite,42,False
+[1062428448512192512],Related,Infrastructure and utilities damage,Related,Infrastructure and utilities damage,,,Related,Infrastructure and utilities damage,True,True,False,2.6192,3,3,0,757,36,,793,,treatment,gemini-3.5-flash-lite,42,False
+[1060978187054788609],Related,Not applicable,Related,Not applicable,,,Related,Not applicable,True,True,False,9.7019,3,3,0,869,32,,901,,treatment,gemini-3.5-flash-lite,42,False
+[1060979435183079424],Related,Other useful information,Related,Not applicable,,,Related,Not applicable,False,True,False,1.9312,3,3,0,749,32,,781,,treatment,gemini-3.5-flash-lite,42,False
+[1062721191876722688],Related,Sympathy and emotional support,Related,Sympathy and emotional support,,,Related,Sympathy and emotional support,True,True,False,2.2498,3,3,0,698,38,,736,,treatment,gemini-3.5-flash-lite,42,False

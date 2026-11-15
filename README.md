@@ -4,9 +4,11 @@
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/Maya-mohammed/arabic-flood-m4-baseline/blob/main/M4_baseline_colab.ipynb)
 
-This repository contains our **single-agent baseline** for classifying Arabic flood-crisis tweets (CPCS683, Milestone 4). A user can type any tweet in a simple interface and get two labels back. The multi-agent treatment will be added in a later milestone.
+This repository contains our **single-agent baseline** for classifying Arabic flood-crisis tweets (CPCS683, Milestone 4). A user can type any tweet in a simple interface and get two labels back. The three-agent treatment was added in Milestone 6.
 
 **Milestone 5 (evaluation harness):** golden set, scoring code and the baseline scored across three seeds are described in [`m5/README.md`](m5/README.md).
+
+**Milestone 6 (experimental condition and results):** the three-agent treatment, its runs on the golden set and the comparison with the baseline are described in [`m6/README.md`](m6/README.md).
 
 ## What the system does
 
@@ -21,7 +23,7 @@ One generalist agent makes **three sequential calls** to the same Gemini model:
 2. Self-review of that classification
 3. Final classification of both labels
 
-Every prompt includes the closed label sets and a one-line definition of each label (`labels.py`). The multi-agent system will import the same file, so both systems see the same labels and definitions.
+Every prompt includes the closed label sets and a one-line definition of each label (`labels.py`). The M6 treatment imports the same file, so both systems see the same labels and definitions.
 
 **Consistency rule (one way only):** if Relevance is `Not related`, Information Type must be `Not applicable`. The reverse is not required: `Related / Not applicable` is valid (452 tweets in the corpus have this pair).
 
@@ -34,17 +36,21 @@ Every prompt includes the closed label sets and a one-line definition of each la
 | File | Purpose |
 |---|---|
 | `baseline.py` | The single-agent baseline: three calls, validation, bounded repair, usage logging |
-| `labels.py` | Closed label sets and label definitions (shared with the future multi-agent system) |
+| `labels.py` | Closed label sets and label definitions (shared with the M6 treatment) |
 | `app.py` | Gradio user interface: type a tweet or pick a test case |
 | `M4_baseline_colab.ipynb` | Colab notebook that runs everything from start to finish |
 | `prepare_data.py` | Cleans the original dataset and creates the development and reserved splits |
-| `evaluate.py` | Runs the baseline on a labelled CSV and saves one result row per tweet |
+| `evaluate.py` | Runs the baseline (or, from M6, the treatment) on a labelled CSV and saves one result row per tweet |
 | `edge_cases_labelled_m4.csv` | 11 team-written edge cases with reference labels |
 | `M4_TEST_EVIDENCE.md` | Recorded M4 test results and limitations |
 | `make_golden_set.py` | M5: draws the frozen golden set from the reserved split |
 | `score_runs.py` | M5: scores saved runs per seed, with mean and standard deviation |
 | `M5_evaluation_colab.ipynb` | M5: runs the tests and scoring in Colab |
 | `m5/` | M5: golden set IDs, saved baseline runs, results and [`m5/README.md`](m5/README.md) |
+| `treatment.py` | M6: the three-agent treatment (Relevance Agent, Information-Type Agent, Judge) |
+| `compare_runs.py` | M6: compares baseline and treatment runs seed by seed |
+| `M6_treatment_colab.ipynb` | M6: runs the checks, the treatment runs, the scoring and the comparison in Colab |
+| `m6/` | M6: treatment runs, checks, results and [`m6/README.md`](m6/README.md) |
 | `tests/` | Offline unit tests (no API calls) |
 | `requirements.txt` | Python packages |
 | `.env.example`, `.gitignore` | Key template and files kept out of Git |

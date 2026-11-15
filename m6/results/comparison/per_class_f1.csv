@@ -1,0 +1,10 @@
+task,label,baseline_mean,baseline_sd,treatment_mean,treatment_sd,difference
+Relevance,Related,0.9632,0.0025,0.9511,0.0112,-0.0121
+Relevance,Not related,0.6394,0.0291,0.6498,0.0526,0.0104
+Information Type,Affected individuals,0.7134,0.0087,0.6672,0.0231,-0.0462
+Information Type,Infrastructure and utilities damage,0.4788,0.0856,0.5262,0.0324,0.0474
+Information Type,Donations and volunteering,0.2967,0.0404,0.2850,0.0418,-0.0116
+Information Type,Caution and advice,0.6999,0.0474,0.6842,0.0000,-0.0157
+Information Type,Sympathy and emotional support,0.8137,0.0118,0.7692,0.0000,-0.0444
+Information Type,Other useful information,0.4158,0.0222,0.2718,0.0214,-0.1440
+Information Type,Not applicable,0.6340,0.0434,0.5663,0.0050,-0.0677
