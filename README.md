@@ -8,7 +8,7 @@ This repository contains our **single-agent baseline** for classifying Arabic fl
 
 **Milestone 5 (evaluation harness):** golden set, scoring code and the baseline scored across three seeds are described in [`m5/README.md`](m5/README.md).
 
-**Milestone 6 (experimental condition and results):** the three-agent treatment, its runs on the golden set and the comparison with the baseline are described in [`m6/README.md`](m6/README.md).
+**Milestone 6 (experimental condition and results):** the three-agent treatment, its runs on the golden set and on the team-written edge cases, and the comparison with the baseline are described in [`m6/README.md`](m6/README.md).
 
 ## What the system does
 
@@ -49,8 +49,8 @@ Every prompt includes the closed label sets and a one-line definition of each la
 | `m5/` | M5: golden set IDs, saved baseline runs, results and [`m5/README.md`](m5/README.md) |
 | `treatment.py` | M6: the three-agent treatment (Relevance Agent, Information-Type Agent, Judge) |
 | `compare_runs.py` | M6: compares baseline and treatment runs seed by seed |
-| `M6_treatment_colab.ipynb` | M6: runs the checks, the treatment runs, the scoring and the comparison in Colab |
-| `m6/` | M6: treatment runs, checks, results and [`m6/README.md`](m6/README.md) |
+| `M6_treatment_colab.ipynb` | M6: runs the checks, the treatment runs, the scoring, the comparison and the edge-case runs in Colab |
+| `m6/` | M6: treatment runs, checks, results, edge-case runs and [`m6/README.md`](m6/README.md) |
 | `tests/` | Offline unit tests (no API calls) |
 | `requirements.txt` | Python packages |
 | `.env.example`, `.gitignore` | Key template and files kept out of Git |

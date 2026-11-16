@@ -12,7 +12,7 @@ This folder holds the three-agent treatment runs and the comparison with the sin
 | `evaluate.py` | Runs either system on a labelled CSV (`--system baseline` or `--system treatment`); can resume a run stopped by the API quota |
 | `score_runs.py` | Scores saved runs per seed; adds the Judge measures for treatment runs |
 | `compare_runs.py` | Compares the two conditions seed by seed and writes the tables below |
-| `M6_treatment_colab.ipynb` | Runs the checks, the treatment runs and the scoring in Colab |
+| `M6_treatment_colab.ipynb` | Runs the checks, the treatment runs, the scoring, the comparison and the edge-case runs in Colab |
 | `tests/test_treatment.py` | Offline tests for the treatment and the runner |
 | `m6/runs/treatment/seed_<n>.csv` | Treatment output for every case, one file per seed |
 | `m6/checks/` | The two checks made before the main runs (see "Controlled comparison") |
@@ -60,11 +60,13 @@ python evaluate.py --system treatment --cases private_data/golden_set.csv \
 
 All definitions are read from `labels.py`, the same file the baseline uses. The specialists do not see the one-way rule, because each predicts only one field; the Judge and the validator apply it.
 
-**Topology.** Star: the two specialists work on the same tweet independently and never see each other's output. Both report to the Judge.
+We use one specialist per label because the task has two labels. We add a separate Judge because the two labels are linked by the one-way rule, so one agent has to turn the two answers into one consistent pair. [5] found that changing which agent has the final say helped multi-agent systems, though it did not fix all failures.
 
-**Protocol.** One round. The specialists are called one after the other, then the Judge. There is no negotiation and no revision of specialist outputs. Three planned model calls per tweet, the same as the baseline.
+**Topology.** Star: the two specialists work on the same tweet independently and never see each other's output. Both report to the Judge. We chose this so that the two answers are independent opinions: an error by one specialist cannot steer the other, and the Judge can see when they disagree.
 
-**Termination rule.** A case ends when the Judge returns a valid label pair. Each stage may get one repair request if its output is malformed, uses a label outside the closed set, or, for the Judge, breaks the rule Not related => Not applicable. If any stage is still invalid after its repair, the case ends as failed and counts as wrong, as in the baseline.
+**Protocol.** One round. The specialists are called one after the other, then the Judge. There is no negotiation and no revision of specialist outputs. Three planned model calls per tweet, the same as the baseline. We kept a single round so that the planned number of calls stays equal to the baseline's; debate or revision rounds would add calls and change more than one factor. [5] also lists poor coordination between agents as a common cause of failure, and [6] used debate with a Judge but did not compare it with a single agent.
+
+**Termination rule.** A case ends when the Judge returns a valid label pair. Each stage may get one repair request if its output is malformed, uses a label outside the closed set, or, for the Judge, breaks the rule Not related => Not applicable. If any stage is still invalid after its repair, the case ends as failed and counts as wrong, as in the baseline. Using the same rule and the same repair limit as the baseline keeps the cost of each case bounded and the two conditions comparable.
 
 **Why this design factor.** The baseline asks one generalist agent to predict both labels together and then review itself. The treatment splits the task by role. The studies we reviewed in M3 point to this question without testing it: [2] suggests filtering irrelevant tweets before information-type classification, and [3] asks whether combining two tasks in one prompt affects results. [5] also cites earlier evidence that gains from multi-agent systems over a single agent are often small. The specialists see only their own labels so that each role is focused on one decision; the Judge is the only agent that sees both labels and the rule, so it is the place where the two decisions are reconciled.
 
@@ -195,3 +197,5 @@ Numbered as in our M3 related-work review.
 [3] E. L. McDaniel, S. Scheele, and J. Liu, "Zero-shot classification of crisis tweets using instruction-finetuned large language models," in Proc. IEEE Int. Humanitarian Technologies Conf. (IHTC), 2024, doi: 10.1109/IHTC61819.2024.10855037.
 
 [5] M. Cemri et al., "Why do multi-agent LLM systems fail?," in Proc. Adv. Neural Inf. Process. Syst. (NeurIPS), Datasets and Benchmarks Track, 2025.
+
+[6] N. T. V. Nguyen, F. D. Childress, and Y. Yin, "Debate-driven multi-agent LLMs for phishing email detection," in Proc. 13th Int. Symp. Digital Forensics and Security (ISDFS), 2025, doi: 10.1109/ISDFS65363.2025.11012014.
