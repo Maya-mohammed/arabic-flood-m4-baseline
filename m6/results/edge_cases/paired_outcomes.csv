@@ -1,0 +1,4 @@
+seed,both_correct,baseline_only_correct,treatment_only_correct,both_wrong
+42,9,0,1,1
+123,9,0,2,0
+2026,9,0,2,0

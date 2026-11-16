@@ -1,0 +1,9 @@
+count,baseline,treatment
+cases,33,33
+wrong,6,1
+invalid_or_failed,0,0
+not_related_labelled_related,6,1
+related_labelled_not_related,0,0
+relevance_right_info_type_wrong,0,0
+top_confusion_1,Not applicable -> Sympathy and emotional support (3),Not applicable -> Sympathy and emotional support (1)
+top_confusion_2,Not applicable -> Infrastructure and utilities damage (3),

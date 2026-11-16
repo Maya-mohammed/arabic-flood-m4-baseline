@@ -18,6 +18,9 @@ This folder holds the three-agent treatment runs and the comparison with the sin
 | `m6/checks/` | The two checks made before the main runs (see "Controlled comparison") |
 | `m6/results/treatment/` | Treatment scores: summary, per-class F1, confusion matrices |
 | `m6/results/comparison/` | Baseline versus treatment: `comparison.csv`, `comparison.md`, `per_class_f1.csv`, `paired_outcomes.csv`, `error_breakdown.csv` |
+| `m6/edge_case_ids.csv` | Case IDs and team labels of the 11 M4 edge cases, used to score them |
+| `m6/runs/edge_cases/` | Both systems on the 11 edge cases, one file per system and seed |
+| `m6/results/edge_cases/` | Baseline versus treatment on the edge cases, same tables as the main comparison |
 
 ## How to run
 
@@ -32,6 +35,10 @@ python compare_runs.py \
     --baseline m5/runs/baseline/seed_42.csv m5/runs/baseline/seed_123.csv m5/runs/baseline/seed_2026.csv \
     --treatment m6/runs/treatment/seed_42.csv m6/runs/treatment/seed_123.csv m6/runs/treatment/seed_2026.csv \
     --out m6/results/comparison --price-input 0.30 --price-output 2.50
+python compare_runs.py --golden m6/edge_case_ids.csv \
+    --baseline m6/runs/edge_cases/baseline/seed_42.csv m6/runs/edge_cases/baseline/seed_123.csv m6/runs/edge_cases/baseline/seed_2026.csv \
+    --treatment m6/runs/edge_cases/treatment/seed_42.csv m6/runs/edge_cases/treatment/seed_123.csv m6/runs/edge_cases/treatment/seed_2026.csv \
+    --out m6/results/edge_cases --price-input 0.30 --price-output 2.50
 ```
 
 To repeat the treatment runs, use the notebook, or rebuild the golden set as described in `m5/README.md` and run:
@@ -147,6 +154,24 @@ The baseline's main relevance error, seen since M4, is marking tweets about some
 
 **5. Stability.** The treatment changed its final pair across seeds on 13 of the 140 cases, against 23 for the baseline, which is why its standard deviation is smaller.
 
+## Edge cases
+
+Our evaluation plan also lists a small set of team-written edge cases, scored separately from the golden set. We used the 11 cases from M4 (`edge_cases_labelled_m4.csv`: English, Arabic dialect, mixed Arabic and English, Arabizi, rain without a flood, sarcasm and very short tweets; 4 are Not related). Both systems were run on them on 16 November 2026, after the main comparison, with the frozen code and the same three seeds (section 10 of the notebook).
+
+| Metric | Baseline | Treatment |
+|---|---|---|
+| Joint exact match | 81.82% ± 0.00 (9, 9, 9 of 11) | 96.97% ± 5.25 (10, 11, 11 of 11) |
+| Valid output rate | 100% | 100% |
+| Not related cases labelled Related (of 12 case runs) | 6 | 1 |
+| Related cases labelled Not related (of 21 case runs) | 0 | 0 |
+| First-output consistency violations | 0% | 18.18% |
+| Judge helpful / harmful override rate | n/a | 15.15% / 0% |
+| Estimated cost per case (USD) | 0.000419 | 0.000292 |
+
+The baseline got the same two cases wrong under every seed, the same two it got wrong in M4: a prayer for rain (EDGE06) and a road closed for maintenance (EDGE09), both labelled Related. On EDGE09 its first answer was correct (Not related / Not applicable) in all three seeds, and the self-review changed it to Related / Infrastructure and utilities damage. In the treatment, the Relevance Agent labelled all four Not related cases correctly in every seed. For EDGE06 and EDGE09 the Information-Type Agent still gave a type, so the specialists disagreed; the Judge kept Not related in 5 of these 6 case runs and followed the Information-Type Agent once (EDGE06, seed 42).
+
+This fits the golden-set results. The Relevance Agent is stricter about relevance: it gives fewer false Related labels and more false Not related labels, and the Judge mostly follows it. The edge cases test mainly the first kind of error: none of their Related tweets is of the indirect kind the Relevance Agent missed in the golden set, such as questions about school closures or news about officials. The set is small (the systems differ on 1 or 2 cases per seed), and its labels were written by the team, so we treat it as a check on the robustness categories in our plan, not as a second main result.
+
 ## Limitations
 
 - The golden set is small and balanced by Information Type (see `m5/README.md`). Not related cases are few (16), so relevance results rest on few examples.
@@ -158,6 +183,7 @@ The baseline's main relevance error, seen since M4, is marking tweets about some
 - The one-line label definitions are short. For Donations and volunteering, the definition does not cover reports of help from the authorities, which the gold labels include in this class (see the failure analysis).
 - A few gold labels look arguable, for example a tweet that is only the words "Al Lith floods" and a link, labelled Not related.
 - Both conditions use one model. The result may not hold for other models.
+- The edge cases were run after the main comparison. The code was the same frozen version, but the runs were on a different day.
 - The API did not return reasoning-token counts.
 
 ## References
