@@ -1,0 +1,12 @@
+ID,Relevance,Information Type,category
+EDGE01,Related,Infrastructure and utilities damage,English / flood damage
+EDGE02,Not related,Not applicable,English / rain without a flood
+EDGE03,Related,Affected individuals,Arabic dialect / people affected
+EDGE04,Related,Caution and advice,Mixed Arabic-English / warning
+EDGE05,Related,Infrastructure and utilities damage,Arabizi / damaged bridge
+EDGE06,Not related,Not applicable,Arabic rain prayer
+EDGE07,Related,Infrastructure and utilities damage,Sarcasm / damage
+EDGE08,Related,Affected individuals,Very short / trapped people
+EDGE09,Not related,Not applicable,Unrelated road closure
+EDGE11,Not related,Not applicable,Metaphorical drowning
+EDGE12,Related,Donations and volunteering,Volunteering / confusing affected people
